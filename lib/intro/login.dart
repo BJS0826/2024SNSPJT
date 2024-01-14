@@ -1,4 +1,5 @@
 import 'package:christian_sns/intro/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,6 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailLogin = TextEditingController();
   final TextEditingController _pwLogin = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -161,8 +163,30 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      onPressed: () {
-                        // 로그인 버튼 클릭 로직
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          try {
+                            print(_emailLogin.text);
+                            print(_pwLogin.text);
+                            await _auth.signInWithEmailAndPassword(
+                                email: _emailLogin.text,
+                                password: _pwLogin.text);
+
+                            if (context.mounted) {
+                              //나중에 로그인 완료시 이동할 페이지 저장
+                              print('로그인성공!');
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("로그인을 실패했습니다"),
+                                  backgroundColor: Colors.blue,
+                                ),
+                              );
+                            }
+                          }
+                        }
                       },
                       child: Text('로그인', style: TextStyle(color: Colors.white)),
                     ),

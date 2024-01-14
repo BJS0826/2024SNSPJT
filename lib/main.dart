@@ -1,8 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:christian_sns/intro/login.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  FirebaseOptions firebaseOptions = DefaultFirebaseOptions.currentPlatform;
+
+  // Firebase 앱을 초기화합니다.
+  await Firebase.initializeApp(
+    options: firebaseOptions,
+  );
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -50,7 +62,7 @@ class _IntroPageState extends State<IntroPage> {
             ),
             const SizedBox(height: 20), // 이미지와 텍스트 사이의 간격 조절
             Text(
-              '셀모임',
+              '헤브넷',
               style: TextStyle(
                 fontSize: 45, // 텍스트 크기 조절
                 fontWeight: FontWeight.bold, // 텍스트 굵기 조절
@@ -70,7 +82,7 @@ class _IntroPageState extends State<IntroPage> {
 }
 
 class MyAppBody extends StatelessWidget {
-  const MyAppBody({Key? key});
+  const MyAppBody({super.key});
 
   @override
   Widget build(BuildContext context) {
