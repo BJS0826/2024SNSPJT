@@ -53,12 +53,12 @@ class _SignupPageState extends State<SignupPage> {
         await _storage.collection('user').doc(uid).set({
           'email': _emailRegister.text,
           'userName': _nameRegister.text,
-          // 'picked_image': imageURL,
-          // 'myMoimList': myMoimList,
-          // 'interests': interests,
-          // 'myChurch': myChurch,
-          // 'myLocation': myLocation,
-          // 'myIntroduction': myIntroduction
+          'picked_image': imageURL,
+          'myMoimList': myMoimList,
+          'interests': interests,
+          'myChurch': myChurch,
+          'myLocation': myLocation,
+          'myIntroduction': myIntroduction
         });
 
         // 회원가입 성공 시 작업 수행
