@@ -1,5 +1,7 @@
+import 'package:christian_sns/home.dart';
 import 'package:christian_sns/intro/login.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:christian_sns/intro/login.dart';
 import 'firebase_options.dart';
@@ -82,12 +84,20 @@ class _IntroPageState extends State<IntroPage> {
 }
 
 class MyAppBody extends StatelessWidget {
-  const MyAppBody({super.key});
+  const MyAppBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(), // 항상 LoginPage로 이동하도록 수정
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const HomePage();
+          }
+          return const LoginPage();
+        },
+      ),
     );
   }
 }
