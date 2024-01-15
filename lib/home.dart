@@ -1,3 +1,4 @@
+import 'package:christian_sns/botnav/createfeed.dart';
 import 'package:christian_sns/botnav/mainfeed.dart';
 import 'package:christian_sns/botnav/walkwith.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,16 @@ class _HomePageState extends State<HomePage> {
             ),
             label: '동행',
           ),
+          BottomNavigationBarItem(
+            icon: IconButton(
+              onPressed: () => setState(() {
+                _selectedIndex = 2;
+              }),
+              icon: const Icon(Icons.add_box),
+              color: Colors.black54,
+            ),
+            label: '작성',
+          ),
         ],
       ),
       body: _widgetList.elementAt(_selectedIndex),
@@ -54,4 +65,5 @@ class _HomePageState extends State<HomePage> {
 List<Widget> _widgetList = <Widget>[
   MainFeedPage(),
   WalkWithPage(),
+  CreateFeedPage(),
 ];
