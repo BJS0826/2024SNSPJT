@@ -174,7 +174,14 @@ class _LoginPageState extends State<LoginPage> {
 
                             if (context.mounted) {
                               //나중에 로그인 완료시 이동할 페이지 저장
+
                               print('로그인성공!');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("로그인 성공 !!!"),
+                                  backgroundColor: Colors.blue,
+                                ),
+                              );
                             }
                           } catch (e) {
                             if (context.mounted) {
