@@ -1,9 +1,10 @@
+import 'package:christian_sns/botnav/mainfeed.dart';
 import 'package:christian_sns/intro/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -169,29 +170,32 @@ class _LoginPageState extends State<LoginPage> {
                             print(_emailLogin.text);
                             print(_pwLogin.text);
                             await _auth.signInWithEmailAndPassword(
-                                email: _emailLogin.text,
-                                password: _pwLogin.text);
+                              email: _emailLogin.text,
+                              password: _pwLogin.text,
+                            );
 
-                            if (context.mounted) {
-                              //나중에 로그인 완료시 이동할 페이지 저장
-
-                              print('로그인성공!');
+                            if (_auth.currentUser != null) {
+                              print('로그인 성공!');
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text("로그인 성공 !!!"),
                                   backgroundColor: Colors.blue,
                                 ),
                               );
-                            }
-                          } catch (e) {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("로그인을 실패했습니다"),
-                                  backgroundColor: Colors.blue,
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MainFeedPage(),
                                 ),
                               );
                             }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("로그인을 실패했습니다"),
+                                backgroundColor: Colors.blue,
+                              ),
+                            );
                           }
                         }
                       },
