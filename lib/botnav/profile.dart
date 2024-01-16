@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:christian_sns/botnav/editprofile.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -41,75 +42,93 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: 20),
-            CircleAvatar(
-              radius: 60,
-              backgroundImage: AssetImage('assets/logo.png'),
-            ),
-            SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfileDetailPage(),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundImage: AssetImage('assets/logo.png'),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfileDetailPage(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                '배준식',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfileDetailPage(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                '베드로의 발자취를 따라가는 자',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditProfilePage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                );
-              },
-              child: Text(
-                '이름',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Text('1'),
+                          Text('게시물'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text('1'),
+                          Text('팔로워'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text('1'),
+                          Text('팔로잉'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: 5),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfileDetailPage(),
-                  ),
-                );
-              },
-              child: Text(
-                '짧은 소개',
-                style: TextStyle(fontSize: 14),
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditProfilePage(),
-                  ),
-                );
-              },
-              child: Text('프로필 편집'),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    Text('게시물'),
-                    Text('0'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text('팔로잉'),
-                    Text('0'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text('팔로워'),
-                    Text('0'),
-                  ],
-                ),
-              ],
             ),
             SizedBox(height: 20),
             GridView.builder(
@@ -120,11 +139,22 @@ class ProfilePage extends StatelessWidget {
                 crossAxisCount: 3,
               ),
               itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.all(2),
-                  child: Image.asset(
-                    'assets/logo.png',
-                    fit: BoxFit.cover,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            PostPage(index), // index를 이용하여 해당 게시물 페이지를 표시
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(2),
+                    child: Image.asset(
+                      'assets/logo.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 );
               },
@@ -145,6 +175,24 @@ class ProfileDetailPage extends StatelessWidget {
       ),
       body: Center(
         child: Text('프로필 상세 페이지'),
+      ),
+    );
+  }
+}
+
+class PostPage extends StatelessWidget {
+  final int postIndex;
+
+  PostPage(this.postIndex);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('게시물'),
+      ),
+      body: Center(
+        child: Text('게시물 $postIndex 페이지'),
       ),
     );
   }
