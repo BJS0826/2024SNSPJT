@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:christian_sns/botnav/feeddetail.dart';
 
 class CreateFeedPage extends StatefulWidget {
   @override
@@ -10,6 +11,7 @@ class CreateFeedPage extends StatefulWidget {
 class _CreateFeedPageState extends State<CreateFeedPage> {
   String feedContent = '';
   File? selectedImage;
+  File? selectedBackgroundImage;
 
   Future<void> getImageFromGallery() async {
     final picker = ImagePicker();
@@ -19,6 +21,24 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
         selectedImage = File(pickedImage.path);
       });
     }
+  }
+
+  Future<void> getBackgroundImageFromGallery() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        selectedBackgroundImage = File(pickedImage.path);
+      });
+    }
+  }
+
+  void navigateToFeedDetailPage() {
+    // FeedDetailPage로 이동하는 코드 작성
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => FeedDetailPage()),
+    );
   }
 
   @override
@@ -84,6 +104,14 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
               child: Text('갤러리에서 선택'),
             ),
             SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // "배경화면 선택" 버튼 동작
+                getBackgroundImageFromGallery();
+              },
+              child: Text('배경화면 선택'),
+            ),
+            SizedBox(height: 20),
             GestureDetector(
               onTap: () {
                 // 선택된 이미지 확대/축소 동작
@@ -108,6 +136,7 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
               onPressed: () {
                 // 피드 작성 버튼 동작
                 // 피드 내용과 함께 작성된 피드를 서버에 전송하거나 다른 동작을 수행할 수 있습니다.
+                navigateToFeedDetailPage();
               },
               child: Text('작성하기'),
             ),

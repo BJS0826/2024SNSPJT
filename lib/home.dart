@@ -1,6 +1,8 @@
 import 'package:christian_sns/botnav/createfeed.dart';
 import 'package:christian_sns/botnav/mainfeed.dart';
+import 'package:christian_sns/botnav/profile.dart';
 import 'package:christian_sns/botnav/walkwith.dart';
+import 'package:christian_sns/botnav/board.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -55,6 +57,26 @@ class _HomePageState extends State<HomePage> {
             ),
             label: '작성',
           ),
+          BottomNavigationBarItem(
+            icon: IconButton(
+              onPressed: () => setState(() {
+                _selectedIndex = 3;
+              }),
+              icon: const Icon(Icons.add_box),
+              color: Colors.black54,
+            ),
+            label: '게시판',
+          ),
+          BottomNavigationBarItem(
+            icon: IconButton(
+              onPressed: () => setState(() {
+                _selectedIndex = 4;
+              }),
+              icon: const Icon(Icons.add_box),
+              color: Colors.black54,
+            ),
+            label: '프로필',
+          ),
         ],
       ),
       body: _widgetList.elementAt(_selectedIndex),
@@ -66,4 +88,6 @@ List<Widget> _widgetList = <Widget>[
   MainFeedPage(),
   WalkWithPage(),
   CreateFeedPage(),
+  BoardPage(),
+  ProfilePage(),
 ];
