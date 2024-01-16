@@ -1,3 +1,4 @@
+import 'package:christian_sns/botnav/mainfeed.dart';
 import 'package:christian_sns/intro/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -176,10 +177,10 @@ class _LoginPageState extends State<LoginPage> {
                               //나중에 로그인 완료시 이동할 페이지 저장
 
                               print('로그인성공!');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("로그인 성공 !!!"),
-                                  backgroundColor: Colors.blue,
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MainFeedPage(),
                                 ),
                               );
                             }

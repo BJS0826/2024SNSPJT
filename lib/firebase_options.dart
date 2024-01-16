@@ -44,38 +44,38 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBlHd5QJ0oYc_iR7nGVuQgTmuVLie08rHc',
-    appId: '1:245063836374:web:5a1826686a16f897fa5f77',
-    messagingSenderId: '245063836374',
-    projectId: 'ndproject-743d6',
-    authDomain: 'ndproject-743d6.firebaseapp.com',
-    storageBucket: 'ndproject-743d6.appspot.com',
-    measurementId: 'G-W8LR5B2ZGL',
+    apiKey: 'AIzaSyDVzVAU6JSOCqjN7VCRipapggZpXyvVzBU',
+    appId: '1:680598587804:web:c4771a0255f0a94fd1e059',
+    messagingSenderId: '680598587804',
+    projectId: 'sns2024-f3922',
+    authDomain: 'sns2024-f3922.firebaseapp.com',
+    storageBucket: 'sns2024-f3922.appspot.com',
+    measurementId: 'G-X4LP7N0S15',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBFGiCR8o2W1ZpxRDGUYFCLn5gSo2FagpI',
-    appId: '1:245063836374:android:005ca4a4c309c9fbfa5f77',
-    messagingSenderId: '245063836374',
-    projectId: 'ndproject-743d6',
-    storageBucket: 'ndproject-743d6.appspot.com',
+    apiKey: 'AIzaSyC8HBG-XgVFzG1Wq5kHVAX_a-SrB7YVUQ0',
+    appId: '1:680598587804:android:40aab0e3f1472dbfd1e059',
+    messagingSenderId: '680598587804',
+    projectId: 'sns2024-f3922',
+    storageBucket: 'sns2024-f3922.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA38Act5RO9bmS4QapX2O7vFcdm_xpBU0k',
-    appId: '1:245063836374:ios:dd429393c5640b37fa5f77',
-    messagingSenderId: '245063836374',
-    projectId: 'ndproject-743d6',
-    storageBucket: 'ndproject-743d6.appspot.com',
+    apiKey: 'AIzaSyBGPd6_QohTWM0bwbxNaPP_p1vGo3SH0nY',
+    appId: '1:680598587804:ios:94ceaeff89d048c0d1e059',
+    messagingSenderId: '680598587804',
+    projectId: 'sns2024-f3922',
+    storageBucket: 'sns2024-f3922.appspot.com',
     iosBundleId: 'com.example.christianSns',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA38Act5RO9bmS4QapX2O7vFcdm_xpBU0k',
-    appId: '1:245063836374:ios:ea9c0eed4e85da1dfa5f77',
-    messagingSenderId: '245063836374',
-    projectId: 'ndproject-743d6',
-    storageBucket: 'ndproject-743d6.appspot.com',
+    apiKey: 'AIzaSyBGPd6_QohTWM0bwbxNaPP_p1vGo3SH0nY',
+    appId: '1:680598587804:ios:be49412dd74e8c55d1e059',
+    messagingSenderId: '680598587804',
+    projectId: 'sns2024-f3922',
+    storageBucket: 'sns2024-f3922.appspot.com',
     iosBundleId: 'com.example.christianSns.RunnerTests',
   );
 }
