@@ -174,12 +174,16 @@ class _LoginPageState extends State<LoginPage> {
                               password: _pwLogin.text,
                             );
 
-                            if (_auth.currentUser != null) {
-                              print('로그인 성공!');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("로그인 성공 !!!"),
-                                  backgroundColor: Colors.blue,
+
+                            if (context.mounted) {
+                              //나중에 로그인 완료시 이동할 페이지 저장
+
+                              print('로그인성공!');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MainFeedPage(),
+
                                 ),
                               );
                               Navigator.pushReplacement(
