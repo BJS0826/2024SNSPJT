@@ -13,7 +13,6 @@ void main() async {
 
   // Firebase 앱을 초기화합니다.
   await Firebase.initializeApp(
-    name: "CHRISTIAN_SNS_APP",
     options: firebaseOptions,
   );
 
