@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-class MainFeedPage extends StatelessWidget {
+class MainFeedPage extends StatefulWidget {
+  @override
+  _MainFeedPageState createState() => _MainFeedPageState();
+}
+
+class _MainFeedPageState extends State<MainFeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,6 +21,26 @@ class MainFeedPage extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              // 검색 버튼 동작
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.favorite),
+            onPressed: () {
+              // 하트 버튼 동작
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.message),
+            onPressed: () {
+              // 메시지 버튼 동작
+            },
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(16.0),
           child: Container(
@@ -158,14 +183,13 @@ class MainFeedPage extends StatelessWidget {
             ),
             SizedBox(height: 20), // 추천 친구 목록 위 여백
             Container(
-              height: 200, // 추천 친구 목록 영역의 높이
+              height: 200, // 추천 친구 목록의 높이
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 5, // 추천 친구 개수
+                itemCount: 10, // 추천 친구 수
                 itemBuilder: (context, index) {
                   return Container(
-                    width: 120, // 추천 친구 컨테이너 폭
-                    padding: EdgeInsets.all(10.0), // 여백 추가
+                    width: 100, // 친구 카드의 너비
                     child: Column(
                       children: [
                         CircleAvatar(
@@ -174,20 +198,7 @@ class MainFeedPage extends StatelessWidget {
                             'assets/logo.png', // assets 폴더 경로와 파일 이름으로 수정해주세요
                           ),
                         ),
-                        SizedBox(height: 10.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('추천 친구'),
-                            Text('간략한 소개'),
-                            ElevatedButton(
-                              onPressed: () {
-                                // 팔로우 버튼 동작
-                              },
-                              child: Text('팔로우'),
-                            ),
-                          ],
-                        ),
+                        Text('추천 친구'),
                       ],
                     ),
                   );
