@@ -111,7 +111,7 @@ class _WalkWithPageState extends State<WalkWithPage> {
                           children: [
                             CircleAvatar(
                               radius: 12.0,
-                              backgroundImage: AssetImage('assets/profile.png'),
+                              backgroundImage: AssetImage('assets/logo.png'),
                             ),
                             SizedBox(width: 8.0),
                             Text(
@@ -188,7 +188,7 @@ class _WalkWithPageState extends State<WalkWithPage> {
                                 CircleAvatar(
                                   radius: 12.0,
                                   backgroundImage:
-                                      AssetImage('assets/profile.png'),
+                                      AssetImage('assets/logo.png'),
                                 ),
                                 SizedBox(width: 8.0),
                                 Text(

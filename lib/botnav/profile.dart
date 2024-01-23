@@ -40,160 +40,109 @@ class ProfilePage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 20),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundImage: AssetImage('assets/logo.png'),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ProfileDetailPage(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                '배준식',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ProfileDetailPage(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                '베드로의 발자취를 따라가는 자',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditProfilePage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileDetailPage(),
                   ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  '1',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  '게시물',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  '1',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  '팔로워',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  '1',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  '팔로잉',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+                );
+              },
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: AssetImage('assets/logo.png'),
               ),
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '배준식',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    // 연필 버튼 동작
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilePage(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '베드로의 발자취를 따라가는 자!',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(width: 8),
+              ],
+            ),
+            SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '예수님의 성품을 닮아가기를 원합니다.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(width: 8),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: buildBox('게시물', '123'),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      // "팔로워"를 눌렀을 때의 동작 정의
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => FollowerPage()),
+                      );
+                    },
+                    child: buildBox('팔로워', '456'),
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      // "팔로잉"을 눌렀을 때의 동작 정의
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FollowingPage()),
+                      );
+                    },
+                    child: buildBox('팔로잉', '789'),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 20),
             GridView.builder(
@@ -229,6 +178,53 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
+
+  Widget buildBox(String title, String count) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 5),
+          Text(
+            count,
+            style: TextStyle(fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FollowerPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Followers'),
+      ),
+      // FollowerPage의 바디 설정...
+    );
+  }
+}
+
+class FollowingPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Following'),
+      ),
+      // FollowingPage의 바디 설정...
+    );
+  }
 }
 
 class ProfileDetailPage extends StatelessWidget {
@@ -238,8 +234,49 @@ class ProfileDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('프로필 상세'),
       ),
-      body: Center(
-        child: Text('프로필 상세 페이지'),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: CircleAvatar(
+                radius: 80,
+                backgroundImage: AssetImage('assets/logo.png'),
+              ),
+            ),
+            SizedBox(height: 16),
+            buildProfileItem('이름', '배준식'),
+            buildProfileItem('자기 소개', '베드로의 발자취를 따라가는 자'),
+            buildProfileItem('기도제목', '예수님의 성품을 닮아가기를 원합니다.'),
+            buildProfileItem('프로필 뮤직', '어노인팅 - 우리의 기도'),
+            buildProfileItem('성경 인물', '아브라함(INFP)'),
+            buildProfileItem('소속 교회', '베다니교회'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildProfileItem(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(fontSize: 16),
+          ),
+        ],
       ),
     );
   }
@@ -258,20 +295,6 @@ class PostPage extends StatelessWidget {
       ),
       body: Center(
         child: Text('게시물 $postIndex 페이지'),
-      ),
-    );
-  }
-}
-
-class EditProfilePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('프로필 편집'),
-      ),
-      body: Center(
-        child: Text('프로필 편집 페이지'),
       ),
     );
   }
