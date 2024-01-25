@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:christian_sns/botnav/editprofile.dart';
+import 'package:christian_sns/appbar/search.dart';
+import 'package:christian_sns/appbar/notification.dart';
+import 'package:christian_sns/appbar/message.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -22,18 +25,30 @@ class ProfilePage extends StatelessWidget {
             icon: Icon(Icons.search),
             onPressed: () {
               // 검색 버튼 동작
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchPage()),
+              );
             },
           ),
           IconButton(
-            icon: Icon(Icons.favorite),
+            icon: Icon(Icons.notifications),
             onPressed: () {
-              // 하트 버튼 동작
+              // 알림 버튼 동작
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationPage()),
+              );
             },
           ),
           IconButton(
             icon: Icon(Icons.message),
             onPressed: () {
               // 메시지 버튼 동작
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DirectMessagePage()),
+              );
             },
           ),
         ],
@@ -282,10 +297,18 @@ class ProfileDetailPage extends StatelessWidget {
   }
 }
 
-class PostPage extends StatelessWidget {
+class PostPage extends StatefulWidget {
   final int postIndex;
 
   PostPage(this.postIndex);
+
+  @override
+  _PostPageState createState() => _PostPageState();
+}
+
+class _PostPageState extends State<PostPage> {
+  bool isLiked = false;
+  List<String> comments = ['댓글 1', '댓글 2', '댓글 3']; // 댓글 목록
 
   @override
   Widget build(BuildContext context) {
@@ -293,8 +316,132 @@ class PostPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('게시물'),
       ),
-      body: Center(
-        child: Text('게시물 $postIndex 페이지'),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // 이미지가 상단에 크게 나오는 부분
+            Image.asset(
+              'assets/logo.png', // 이미지 경로 수정 필요
+              fit: BoxFit.cover,
+              height: 300, // 이미지 높이 조절 가능
+            ),
+            SizedBox(height: 16),
+
+            // 카테고리 및 해시태그 부분
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 카테고리
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      '중보기도',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  // 해시태그
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      '건강',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // 글 내용 부분
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '제 건강을 위해 함께 기도해 주세요.',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+            ),
+
+            // 댓글 부분
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '댓글',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  // 댓글 목록 표시
+                  Column(
+                    children: comments.map((comment) => Text(comment)).toList(),
+                  ),
+                  SizedBox(height: 8),
+                  // 댓글 입력 폼
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: '댓글을 입력하세요',
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.send),
+                        onPressed: () {
+                          // 댓글 전송 로직 추가
+                          setState(() {
+                            comments.add('새로운 댓글');
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // 좋아요 부분
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      isLiked ? Icons.favorite : Icons.favorite_border,
+                      color: isLiked ? Colors.red : null,
+                    ),
+                    onPressed: () {
+                      // 좋아요 토글 로직 추가
+                      setState(() {
+                        isLiked = !isLiked;
+                      });
+                    },
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    '좋아요',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
