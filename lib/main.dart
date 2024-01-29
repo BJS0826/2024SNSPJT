@@ -3,7 +3,6 @@ import 'package:christian_sns/intro/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:christian_sns/intro/login.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -16,7 +15,7 @@ void main() async {
     options: firebaseOptions,
   );
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -63,7 +62,7 @@ class _IntroPageState extends State<IntroPage> {
               height: 300, // 이미지 높이
             ),
             const SizedBox(height: 20), // 이미지와 텍스트 사이의 간격 조절
-            Text(
+            const Text(
               '헤브넷',
               style: TextStyle(
                 fontSize: 45, // 텍스트 크기 조절
