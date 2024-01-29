@@ -1,4 +1,5 @@
 import 'package:christian_sns/botnav/mainfeed.dart';
+import 'package:christian_sns/home.dart';
 import 'package:christian_sns/intro/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -174,7 +175,6 @@ class _LoginPageState extends State<LoginPage> {
                               password: _pwLogin.text,
                             );
 
-
                             if (context.mounted) {
                               //나중에 로그인 완료시 이동할 페이지 저장
 
@@ -182,14 +182,13 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => MainFeedPage(),
-
+                                  builder: (context) => HomePage(),
                                 ),
                               );
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => MainFeedPage(),
+                                  builder: (context) => HomePage(),
                                 ),
                               );
                             }
