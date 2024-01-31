@@ -1,8 +1,12 @@
 import 'dart:io';
-import 'dart:ui';
+import 'dart:math';
+import 'dart:ui' as ui;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -23,6 +27,16 @@ class _FeedDetailPageState extends State<FeedDetailPage> {
   late Color currentColor;
   late double fontSize;
   late FontWeight selectedFontWeight;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  late User user;
+  final Random random = Random();
+  bool expand = false;
+  TextEditingController _hashtagTextEditingController = TextEditingController();
+  String imageUrl = "";
+  GlobalKey _globalKey = GlobalKey();
+  List<String> hashTags = [];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -33,6 +47,36 @@ class _FeedDetailPageState extends State<FeedDetailPage> {
     currentColor = Colors.white;
     fontSize = 20;
     selectedFontWeight = FontWeight.normal;
+    user = _auth.currentUser!;
+  }
+
+  Future<void> _uploadFeed() async {
+    final userData = await _firestore.collection('user').doc(user.uid).get();
+    String userName = userData.get('userName');
+    String saveCategory = selectedCategory;
+    String saveContent = mainText;
+    List<String> saveHashtags = hashTags;
+    Map<String, dynamic> saveUsertags = {user.uid: userName};
+    String saveWhen = selectedHashTag;
+    String saveRight = accessRange;
+    Map<String, dynamic> saveWriter = {user.uid: userName};
+    Timestamp now = Timestamp.fromDate(DateTime.now());
+    List<String> feedFavorite = [];
+
+    await _uploadImage();
+
+    await _firestore.collection("snsFeed").add({
+      "category": saveCategory,
+      "mainText": saveContent,
+      "hashTags": saveHashtags,
+      "userTags": saveUsertags,
+      "when": saveWhen,
+      "right": saveRight,
+      "regdate": now,
+      "writer": saveWriter,
+      "favorite": feedFavorite,
+      "feedImage": imageUrl,
+    });
   }
 
   Future<void> getImageFromGallery() async {
@@ -48,11 +92,6 @@ class _FeedDetailPageState extends State<FeedDetailPage> {
   void changeColor(Color color) {
     setState(() => currentColor = color);
   }
-
-  bool expand = false;
-  TextEditingController _hashtagTextEditingController = TextEditingController();
-
-  List<String> hashTags = [];
 
   void _addHashTag() {
     String newHashTag = _hashtagTextEditingController.text.trim();
@@ -87,13 +126,12 @@ class _FeedDetailPageState extends State<FeedDetailPage> {
     if (hashTags.isNotEmpty) {
       try {
         // Firestore에 연결
-        FirebaseFirestore firestore = FirebaseFirestore.instance;
 
         // hashtag 컬렉션의 문서 ID는 임의로 설정
         String documentId = '1HgsV3jq9l6AE0KmgUFq';
 
         // hashtag 문서에 일괄 추가
-        await firestore.collection('hashtag').doc(documentId).update({
+        await _firestore.collection('hashtag').doc(documentId).update({
           'tag': FieldValue.arrayUnion(hashTags),
         });
 
@@ -121,6 +159,41 @@ class _FeedDetailPageState extends State<FeedDetailPage> {
         await hashTagCollection.where('tag', arrayContains: hashTag).get();
 
     return querySnapshot.docs.isNotEmpty;
+  }
+
+  Future<void> _uploadImage() async {
+    imageUrl = widget.backimage.path;
+    int randomNumber = random.nextInt(9999999 - 1000000 + 1) + 1000000;
+    String title = user.uid + randomNumber.toString();
+
+    try {
+      RenderObject? renderObject =
+          _globalKey.currentContext?.findRenderObject();
+
+      RenderRepaintBoundary boundary = renderObject as RenderRepaintBoundary;
+
+      ui.Image image = await boundary.toImage();
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      // 이미지를 저장할 Firebase Storage 경로
+      String imagePath = 'images/$title.png';
+
+      // Firebase Storage에 이미지 업로드
+      await firebase_storage.FirebaseStorage.instance
+          .ref(imagePath)
+          .putData(pngBytes);
+
+      // 이미지의 다운로드 URL 가져오기
+      imageUrl = await firebase_storage.FirebaseStorage.instance
+          .ref(imagePath)
+          .getDownloadURL();
+
+      print("이미지가 성공적으로 Firebase Storage에 업로드되었습니다.");
+    } catch (e) {
+      print("이미지 업로드 중 오류가 발생했습니다: $e");
+    }
   }
 
   @override
@@ -227,22 +300,25 @@ class _FeedDetailPageState extends State<FeedDetailPage> {
               ),
               GestureDetector(
                 onTap: getImageFromGallery,
-                child: AspectRatio(
-                  aspectRatio: image.width / image.height,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        image: DecorationImage(
-                            image: FileImage(widget.backimage),
-                            fit: BoxFit.contain)),
-                    child: Center(
-                        child: Text(
-                      mainText,
-                      style: TextStyle(
-                          color: currentColor,
-                          fontSize: fontSize,
-                          fontWeight: selectedFontWeight),
-                    )),
+                child: RepaintBoundary(
+                  key: _globalKey,
+                  child: AspectRatio(
+                    aspectRatio: image.width / image.height,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          image: DecorationImage(
+                              image: FileImage(widget.backimage),
+                              fit: BoxFit.contain)),
+                      child: Center(
+                          child: Text(
+                        mainText,
+                        style: TextStyle(
+                            color: currentColor,
+                            fontSize: fontSize,
+                            fontWeight: selectedFontWeight),
+                      )),
+                    ),
                   ),
                 ),
               ),
@@ -495,7 +571,8 @@ class _FeedDetailPageState extends State<FeedDetailPage> {
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               ElevatedButton(
                 onPressed: () async {
-                  return _addAllPendingHashTagsToFirestore();
+                  _addAllPendingHashTagsToFirestore();
+                  _uploadFeed();
                 },
                 child: Text('작성하기'),
               ),
