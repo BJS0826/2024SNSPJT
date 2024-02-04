@@ -23,6 +23,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _favoriteHymnController.dispose();
     _biblicalCharacterMBTIController.dispose();
     _churchMembershipController.dispose();
+    _denominationController.dispose();
     super.dispose();
   }
 
@@ -31,120 +32,143 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('프로필 편집'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton.icon(
+              onPressed: () {
+                _saveProfile();
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.lightBlueAccent,
+              ),
+              icon: Icon(
+                Icons.save,
+                color: Colors.white,
+              ),
+              label: Text(
+                '저장',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
-        // 오버플로우 문제를 해결하기 위해 SingleChildScrollView로 감싸주었습니다.
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '이름',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  hintText: '이름을 입력하세요',
+              SizedBox(height: 16),
+              // 프로필 이미지 선택 부분 (가운데 정렬)
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    // 프로필 이미지 선택 로직 추가
+                  },
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage('assets/logo.png'),
+                    // 현재 프로필 이미지를 보여주는 로직 추가
+                  ),
                 ),
               ),
               SizedBox(height: 16),
-              Text(
-                '짧은 소개',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              TextFormField(
-                controller: _shortBioController,
-                decoration: InputDecoration(
-                  hintText: '짧은 소개를 입력하세요',
-                ),
-              ),
-              SizedBox(height: 16),
-              Text(
-                '기도제목',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              TextFormField(
-                controller: _prayerTitleController,
-                decoration: InputDecoration(
-                  hintText: '기도제목을 입력하세요',
-                ),
-              ),
-              SizedBox(height: 16),
-              Text(
-                '좋아하는 찬양',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              TextFormField(
-                controller: _favoriteHymnController,
-                decoration: InputDecoration(
-                  hintText: '좋아하는 찬양을 입력하세요',
-                ),
-              ),
-              SizedBox(height: 16),
-              Text(
-                '성경 인물 MBTI',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              TextFormField(
-                controller: _biblicalCharacterMBTIController,
-                decoration: InputDecoration(
-                  hintText: '성경 인물 MBTI를 입력하세요',
-                ),
-              ),
-              SizedBox(height: 16),
-              Text(
-                '소속 교회',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              TextFormField(
-                controller: _churchMembershipController,
-                decoration: InputDecoration(
-                  hintText: '소속 교회를 입력하세요',
-                ),
-              ),
-              SizedBox(height: 16),
-              SizedBox(height: 8),
-              SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  String name = _nameController.text;
-                  String shortBio = _shortBioController.text;
-                  String prayerTitle = _prayerTitleController.text;
-                  String favoriteHymn = _favoriteHymnController.text;
-                  String biblicalCharacterMBTI =
-                      _biblicalCharacterMBTIController.text;
-                  String churchMembership = _churchMembershipController.text;
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('저장 완료'),
-                      content: Text('프로필이 저장되었습니다.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                          child: Text('확인'),
-                        ),
-                      ],
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '이름',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                  );
-                },
-                child: Text('저장'),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        hintText: '이름을 입력하세요',
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      '자기 소개',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      controller: _shortBioController,
+                      decoration: InputDecoration(
+                        hintText: '자기 소개를 입력하세요',
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      '기도제목',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      controller: _prayerTitleController,
+                      decoration: InputDecoration(
+                        hintText: '기도제목을 입력하세요',
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      '프로필 뮤직',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      controller: _favoriteHymnController,
+                      decoration: InputDecoration(
+                        hintText: '프로필 뮤직을 입력하세요',
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      '성경 인물 MBTI',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      controller: _biblicalCharacterMBTIController,
+                      decoration: InputDecoration(
+                        hintText: '성경 인물 MBTI를 입력하세요',
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      '소속 교회',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      controller: _churchMembershipController,
+                      decoration: InputDecoration(
+                        hintText: '소속 교회를 입력하세요',
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _saveProfile() {
+    // 저장 로직 추가
   }
 }
