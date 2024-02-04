@@ -155,6 +155,7 @@ class _BoardPageState extends State<BoardPage> {
             MaterialPageRoute(builder: (context) => BoardPostPage()),
           );
         },
+        backgroundColor: Colors.lightBlueAccent, // 옅은 하늘색으로 변경
       ),
     );
   }
