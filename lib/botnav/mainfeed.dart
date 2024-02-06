@@ -8,6 +8,8 @@ import 'package:intl/intl.dart'; // 이 부분은 날짜 형식을 변환하기 
 import 'dart:ui' as ui;
 
 class MainFeedPage extends StatefulWidget {
+  const MainFeedPage({super.key});
+
   @override
   _MainFeedPageState createState() => _MainFeedPageState();
 }
@@ -15,13 +17,16 @@ class MainFeedPage extends StatefulWidget {
 class _MainFeedPageState extends State<MainFeedPage> {
   ScrollController _scrollController = ScrollController();
 
-  double _scrollPosition = 0.0;
+  double _lastScrollPosition = 0.0;
+
   List<FeedItem> _feedItems = []; // FeedItem을 사용하도록 변경
   late final userdata;
 
   @override
   void initState() {
     super.initState();
+
+    _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
 
     _loadMoreItems(); // 초기 데이터 로딩
@@ -35,6 +40,8 @@ class _MainFeedPageState extends State<MainFeedPage> {
   }
 
   void _scrollListener() {
+    print("Scroll position: ${_scrollController.position.pixels}");
+    print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
       _loadMoreItems();
@@ -48,17 +55,20 @@ class _MainFeedPageState extends State<MainFeedPage> {
     // Get the last item in the current list
     FeedItem? lastItem = _feedItems.isNotEmpty ? _feedItems.last : null;
 
+    print("_feedItems !!! : $_feedItems");
+
+    print(" 작동체크");
+    print(" 마지막 게시물 날짜 ${lastItem?.regdate ?? "널"}");
     // Query Firestore for the next batch of items
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection(collectionName)
-        .orderBy('regdate') // Assuming 'regdate' is the timestamp field
+        .orderBy('regdate',
+            descending: true) // Assuming 'regdate' is the timestamp field
         .startAfter([
-          lastItem != null ? lastItem.regdate : null
+          lastItem != null ? lastItem.regdate : DateTime.now().toString()
         ]) // Pass the field value instead of DocumentSnapshot
-        .limit(10) // Adjust the limit based on your requirements
+        .limit(2) // Adjust the limit based on your requirements
         .get();
-
-    print("querySnapshot : $querySnapshot");
 
     // Process the documents and convert them to FeedItem objects
     List<FeedItem> newItems = querySnapshot.docs.map((doc) {
@@ -76,6 +86,7 @@ class _MainFeedPageState extends State<MainFeedPage> {
           feedImage: doc['feedImage']);
     }).toList();
 
+    _lastScrollPosition = _scrollController.position.pixels;
     // Update the state to include the new items
     setState(() {
       _feedItems.addAll(newItems);
@@ -138,7 +149,10 @@ class _MainFeedPageState extends State<MainFeedPage> {
           ),
         ),
         body: ListView.builder(
+          key: UniqueKey(),
+          controller: _scrollController,
           itemCount: _feedItems.length,
+          physics: AlwaysScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             FeedItem feedItem = _feedItems[index];
             return FeedItemTile(
