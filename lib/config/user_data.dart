@@ -1,7 +1,7 @@
 class userDataClass {
   final String email;
   final List<String> interests;
-  final String myCherch;
+  final String myChurch;
   final String myIntroduction;
   final List<String> myLocation;
   final Map myMoimList;
@@ -9,7 +9,7 @@ class userDataClass {
   final String userName;
 
   userDataClass(
-      {this.myCherch = '',
+      {this.myChurch = '',
       this.myIntroduction = '',
       this.myLocation = const [],
       this.myMoimList = const {},
@@ -20,6 +20,6 @@ class userDataClass {
 
   @override
   String toString() {
-    return "UserData(email: $email, interests : $interests, myChurch : $myCherch, myIntroduction : $myIntroduction, myLocation : $myLocation, myMoimList : $myMoimList, picked_image : $picked_image, userName 이름! : $userName)";
+    return "UserData(email: $email, interests : $interests, myChurch : $myChurch, myIntroduction : $myIntroduction, myLocation : $myLocation, myMoimList : $myMoimList, picked_image : $picked_image, userName 이름! : $userName)";
   }
 }

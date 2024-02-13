@@ -100,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
         userDataClass currentUserDataInstance = userDataClass(
             email: email,
             interests: interests,
-            myCherch: myChurch,
+            myChurch: myChurch,
             myIntroduction: myIntroduction,
             myLocation: myLocation,
             myMoimList: myMoimList,
@@ -379,9 +379,23 @@ class FollowingPage extends StatelessWidget {
   }
 }
 
-class ProfileDetailPage extends StatelessWidget {
+class ProfileDetailPage extends StatefulWidget {
   final userDataClass currentUserData;
   ProfileDetailPage(this.currentUserData);
+
+  @override
+  State<ProfileDetailPage> createState() => _ProfileDetailPageState();
+}
+
+class _ProfileDetailPageState extends State<ProfileDetailPage> {
+  late userDataClass currentUserData;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    currentUserData = widget.currentUserData;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -390,13 +404,16 @@ class ProfileDetailPage extends StatelessWidget {
         title: Text('프로필 상세'),
         actions: [
           ElevatedButton.icon(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              currentUserData = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditProfilePage(),
+                  builder: (context) => EditProfilePage(
+                    currentUserData: currentUserData,
+                  ),
                 ),
               );
+              setState(() {});
             },
             style: ElevatedButton.styleFrom(
               primary: Colors.lightBlueAccent,
@@ -421,9 +438,8 @@ class ProfileDetailPage extends StatelessWidget {
           children: [
             Center(
               child: CircleAvatar(
-                radius: 80,
-                backgroundImage: AssetImage('assets/logo.png'),
-              ),
+                  radius: 80,
+                  backgroundImage: NetworkImage(currentUserData.picked_image)),
             ),
             SizedBox(height: 16),
             buildProfileItem('이름', currentUserData.userName),
@@ -431,7 +447,7 @@ class ProfileDetailPage extends StatelessWidget {
             buildProfileItem('기도제목', '예수님의 성품을 닮아가기를 원합니다.'),
             buildProfileItem('프로필 뮤직', '어노인팅 - 우리의 기도'),
             buildProfileItem('성경 인물 MBTI', '바나바(INFP)'),
-            buildProfileItem('소속 교회', currentUserData.myCherch),
+            buildProfileItem('소속 교회', currentUserData.myChurch),
           ],
         ),
       ),
@@ -633,10 +649,4 @@ class _PostPageState extends State<PostPage> {
             ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: ProfilePage(),
-  ));
 }
