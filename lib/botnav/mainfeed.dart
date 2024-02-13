@@ -39,7 +39,6 @@ class _MainFeedPageState extends State<MainFeedPage> {
         .collection(collectionName)
         .orderBy('regdate',
             descending: true) // Assuming 'regdate' is the timestamp field
-
         .get();
 
     // Process the documents and convert them to FeedItem objects

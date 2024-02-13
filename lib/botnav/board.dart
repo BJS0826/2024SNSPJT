@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:christian_sns/botnav/boardpost.dart';
 
@@ -137,10 +138,10 @@ class _BoardPageState extends State<BoardPage> {
               child: IndexedStack(
                 index: _selectedTabIndex,
                 children: [
-                  _buildPostList(_tabPostsList[0]), // 전체
-                  _buildPostList(_tabPostsList[1]), // 중보기도
-                  _buildPostList(_tabPostsList[2]), // 자유
-                  _buildPostList(_tabPostsList[3]), // 기타
+                  _buildPostList('전체'), // 전체
+                  _buildPostList('중보기도'), // 중보기도
+                  _buildPostList('자유'), // 자유
+                  _buildPostList('기타'), // 기타
                 ],
               ),
             ),
@@ -188,16 +189,75 @@ class _BoardPageState extends State<BoardPage> {
     );
   }
 
-  Widget _buildPostList(List<BoardPost> posts) {
-    return ListView.builder(
-      itemCount: posts.length,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            _navigateToDetailPage(posts[index]);
-          },
-          child: _buildPostCard(posts[index]),
-        );
+  Widget _buildPostList(String category) {
+    // String category = '전체';
+    // if (_selectedTabIndex == 0) {
+    //   category = '전체';
+    // } else if (_selectedTabIndex == 1) {
+    //   category = '중보기도';
+    // } else if (_selectedTabIndex == 2) {
+    //   category = '자유';
+    // } else {
+    //   category = '기타';
+    // }
+    return FutureBuilder(
+      future: category == '전체'
+          ? FirebaseFirestore.instance
+              .collection('snsboard')
+              .orderBy('regdate', descending: true)
+              .get()
+          : FirebaseFirestore.instance
+              .collection('snsboard')
+              .where('category', isEqualTo: category)
+              .orderBy('regdate', descending: true)
+              .get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: LinearProgressIndicator(),
+          );
+        }
+        if (snapshot.hasError) {
+          return Center(
+            child: LinearProgressIndicator(),
+          );
+        }
+        if (!snapshot.hasData || snapshot.data == null) {
+          return Center(
+            child: Text('No data available'),
+          );
+        } else
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              var document = snapshot.data!.docs[index];
+              String title = document['title'];
+              Map<String, dynamic> writer = document['writer'];
+              Timestamp regdateTimestamp = document['regdate'];
+              DateTime regdate = regdateTimestamp.toDate();
+
+              String categoryeach = document['category'];
+              String content = document['content'];
+              int views = document['views'];
+              int comments = document['comments'];
+
+              BoardPost posts = BoardPost(
+                  author: writer.values.first,
+                  category: categoryeach,
+                  comments: comments,
+                  content: content,
+                  timestamp: regdate,
+                  title: title,
+                  views: views);
+
+              return GestureDetector(
+                onTap: () {
+                  _navigateToDetailPage(posts);
+                },
+                child: _buildPostCard(posts),
+              );
+            },
+          );
       },
     );
   }

@@ -1,12 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class BoardPostPage extends StatefulWidget {
+  const BoardPostPage({super.key});
+
   @override
   _BoardPostPageState createState() => _BoardPostPageState();
 }
 
 class _BoardPostPageState extends State<BoardPostPage> {
-  String _selectedCategory = "전체";
+  String _selectedCategory = "자유";
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  User? user;
+  final TextEditingController _title = TextEditingController();
+  final TextEditingController _content = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    user = firebaseAuth.currentUser;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +31,34 @@ class _BoardPostPageState extends State<BoardPostPage> {
           // 글 작성 버튼 추가
           IconButton(
             icon: Icon(Icons.send),
-            onPressed: () {
-              // 작성한 글을 전송하는 로직 추가
+            onPressed: () async {
+              int views = 0;
+              DateTime now = DateTime.now();
+
+              try {
+                final snapshot = await FirebaseFirestore.instance
+                    .collection('user')
+                    .doc(user!.uid)
+                    .get();
+
+                var userName = await snapshot.data()!['userName'];
+                if (userName != null) {
+                  Map<String, dynamic> writer = {user!.uid: userName};
+
+                  FirebaseFirestore.instance.collection('snsboard').add({
+                    'title': _title.text,
+                    'writer': writer,
+                    'regdate': now,
+                    'category': _selectedCategory,
+                    'views': views,
+                    'comments': "",
+                    'content': _content.text
+                  });
+                  _title.clear();
+                }
+              } catch (e) {
+                print(e);
+              }
             },
           ),
         ],
@@ -40,16 +80,13 @@ class _BoardPostPageState extends State<BoardPostPage> {
               value: _selectedCategory,
               items: [
                 DropdownMenuItem<String>(
-                  child: Text("전체"),
-                  value: "전체",
+                  child: Text("자유"),
+                  value: "자유",
                 ),
+
                 DropdownMenuItem<String>(
                   child: Text("중보기도"),
                   value: "중보기도",
-                ),
-                DropdownMenuItem<String>(
-                  child: Text("자유"),
-                  value: "자유",
                 ),
                 DropdownMenuItem<String>(
                   child: Text("기타"),
@@ -68,6 +105,7 @@ class _BoardPostPageState extends State<BoardPostPage> {
 
             // 제목 TextField
             TextField(
+              controller: _title,
               decoration: InputDecoration(
                 labelText: "제목",
                 border: OutlineInputBorder(),
@@ -78,6 +116,7 @@ class _BoardPostPageState extends State<BoardPostPage> {
 
             // 내용 TextField
             TextField(
+              controller: _content,
               keyboardType: TextInputType.multiline,
               maxLines: 10,
               decoration: InputDecoration(
