@@ -15,10 +15,6 @@ class MainFeedPage extends StatefulWidget {
 }
 
 class _MainFeedPageState extends State<MainFeedPage> {
-  ScrollController _scrollController = ScrollController();
-
-  double _lastScrollPosition = 0.0;
-
   List<FeedItem> _feedItems = []; // FeedItem을 사용하도록 변경
   late final userdata;
 
@@ -26,48 +22,24 @@ class _MainFeedPageState extends State<MainFeedPage> {
   void initState() {
     super.initState();
 
-    _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
-
     _loadMoreItems(); // 초기 데이터 로딩
     userdata = FirebaseAuth.instance;
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
     super.dispose();
-  }
-
-  void _scrollListener() {
-    print("Scroll position: ${_scrollController.position.pixels}");
-    print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      _loadMoreItems();
-    }
   }
 
   Future<void> _loadMoreItems() async {
     // Replace 'your-collection-name' with the actual name of your collection in Firestore
     String collectionName = 'snsFeed';
 
-    // Get the last item in the current list
-    FeedItem? lastItem = _feedItems.isNotEmpty ? _feedItems.last : null;
-
-    print("_feedItems !!! : $_feedItems");
-
-    print(" 작동체크");
-    print(" 마지막 게시물 날짜 ${lastItem?.regdate ?? "널"}");
-    // Query Firestore for the next batch of items
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection(collectionName)
         .orderBy('regdate',
             descending: true) // Assuming 'regdate' is the timestamp field
-        .startAfter([
-          lastItem != null ? lastItem.regdate : DateTime.now().toString()
-        ]) // Pass the field value instead of DocumentSnapshot
-        .limit(2) // Adjust the limit based on your requirements
+
         .get();
 
     // Process the documents and convert them to FeedItem objects
@@ -86,8 +58,6 @@ class _MainFeedPageState extends State<MainFeedPage> {
           feedImage: doc['feedImage']);
     }).toList();
 
-    _lastScrollPosition = _scrollController.position.pixels;
-    // Update the state to include the new items
     setState(() {
       _feedItems.addAll(newItems);
     });
@@ -149,8 +119,6 @@ class _MainFeedPageState extends State<MainFeedPage> {
           ),
         ),
         body: ListView.builder(
-          key: UniqueKey(),
-          controller: _scrollController,
           itemCount: _feedItems.length,
           physics: AlwaysScrollableScrollPhysics(),
           itemBuilder: (context, index) {
@@ -160,162 +128,7 @@ class _MainFeedPageState extends State<MainFeedPage> {
               currentUserUid: userdata.currentUser!.uid,
             );
           },
-        )
-
-        //  SingleChildScrollView(
-        //   child: Column(
-        //     children: [
-        //       SizedBox(height: 20), // 상단 여백
-        //       Container(
-        //         height: 100, // 스토리 영역의 높이
-        //         child: ListView.builder(
-        //           scrollDirection: Axis.horizontal,
-        //           itemCount: 10, // 프로필 사진 개수
-        //           itemBuilder: (context, index) {
-        //             return Container(
-        //               width: 80, // 프로필 사진 크기
-        //               child: Column(
-        //                 children: [
-        //                   CircleAvatar(
-        //                     radius: 30, // 프로필 사진 원형 모양 크기
-        //                     backgroundImage: AssetImage(
-        //                       'assets/logo.png', // assets 폴더 경로와 파일 이름으로 수정해주세요
-        //                     ),
-        //                   ),
-        //                   Text('사람 이름'),
-        //                 ],
-        //               ),
-        //             );
-        //           },
-        //         ),
-        //       ),
-        //       ListView.builder(
-        //         shrinkWrap: true,
-        //         physics: NeverScrollableScrollPhysics(),
-        //         itemCount: 5, // 피드 개수
-        //         itemBuilder: (context, index) {
-        //           return Padding(
-        //             padding: EdgeInsets.symmetric(horizontal: 10.0), // 좌우 여백 추가
-        //             child: Card(
-        //               child: Column(
-        //                 crossAxisAlignment: CrossAxisAlignment.start,
-        //                 children: [
-        //                   ListTile(
-        //                     leading: CircleAvatar(
-        //                       radius: 20, // 프로필 사진 원형 모양 크기
-        //                       backgroundImage: AssetImage(
-        //                         'assets/logo.png', // assets 폴더 경로와 파일 이름으로 수정해주세요
-        //                       ),
-        //                     ),
-        //                     title: Text('강현규'),
-        //                     subtitle: Text('3시간 전'),
-        //                   ),
-        //                   Image.asset(
-        //                     'assets/logo.png', // assets 폴더 경로와 파일 이름으로 수정해주세요
-        //                   ),
-        //                   Padding(
-        //                     padding: const EdgeInsets.all(8.0),
-        //                     child: Column(
-        //                       crossAxisAlignment: CrossAxisAlignment.start,
-        //                       children: [
-        //                         Row(
-        //                           children: [
-        //                             Container(
-        //                               decoration: BoxDecoration(
-        //                                 color: Colors.blue, // 카테고리 배경색
-        //                                 borderRadius: BorderRadius.circular(4.0),
-        //                               ),
-        //                               padding: EdgeInsets.symmetric(
-        //                                 vertical: 4.0,
-        //                                 horizontal: 8.0,
-        //                               ),
-        //                               child: Text(
-        //                                 '카테고리',
-        //                                 style: TextStyle(
-        //                                   color: Colors.white, // 카테고리 텍스트색
-        //                                 ),
-        //                               ),
-        //                             ),
-        //                             SizedBox(width: 4.0),
-        //                             Container(
-        //                               decoration: BoxDecoration(
-        //                                 color: Colors.green, // 해시태그 배경색
-        //                                 borderRadius: BorderRadius.circular(4.0),
-        //                               ),
-        //                               padding: EdgeInsets.symmetric(
-        //                                 vertical: 4.0,
-        //                                 horizontal: 8.0,
-        //                               ),
-        //                               child: Text(
-        //                                 '해시태그',
-        //                                 style: TextStyle(
-        //                                   color: Colors.white, // 해시태그 텍스트색
-        //                                 ),
-        //                               ),
-        //                             ),
-        //                           ],
-        //                         ),
-        //                         SizedBox(height: 8.0),
-        //                         Text(
-        //                           '글 내용',
-        //                           style: TextStyle(
-        //                             fontWeight: FontWeight.bold,
-        //                             fontSize: 16.0,
-        //                           ),
-        //                         ),
-        //                       ],
-        //                     ),
-        //                   ),
-        //                   Row(
-        //                     children: [
-        //                       IconButton(
-        //                         icon: Icon(Icons.favorite),
-        //                         onPressed: () {
-        //                           // 좋아요 버튼 동작
-        //                         },
-        //                       ),
-        //                       IconButton(
-        //                         icon: Icon(Icons.comment),
-        //                         onPressed: () {
-        //                           // 댓글 버튼 동작
-        //                         },
-        //                       ),
-        //                     ],
-        //                   ),
-        //                 ],
-        //               ),
-        //             ),
-        //           );
-        //         },
-        //       ),
-        //       SizedBox(height: 20), // 추천 친구 목록 위 여백
-        //       Container(
-        //         height: 200, // 추천 친구 목록의 높이
-        //         child: ListView.builder(
-        //           scrollDirection: Axis.horizontal,
-        //           itemCount: 10, // 추천 친구 수
-        //           itemBuilder: (context, index) {
-        //             return Container(
-        //               width: 100, // 친구 카드의 너비
-        //               child: Column(
-        //                 children: [
-        //                   CircleAvatar(
-        //                     radius: 30, // 프로필 사진 원형 모양 크기
-        //                     backgroundImage: AssetImage(
-        //                       'assets/logo.png', // assets 폴더 경로와 파일 이름으로 수정해주세요
-        //                     ),
-        //                   ),
-        //                   Text('추천 친구'),
-        //                 ],
-        //               ),
-        //             );
-        //           },
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        );
+        ));
   }
 }
 
@@ -323,7 +136,8 @@ class FeedItemTile extends StatefulWidget {
   final FeedItem feedItem;
   final String currentUserUid;
 
-  FeedItemTile({required this.feedItem, required this.currentUserUid});
+  FeedItemTile(
+      {super.key, required this.feedItem, required this.currentUserUid});
 
   @override
   State<FeedItemTile> createState() => _FeedItemTileState();
