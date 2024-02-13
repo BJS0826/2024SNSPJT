@@ -65,9 +65,9 @@ class _MainFeedPageState extends State<MainFeedPage> {
         .orderBy('regdate',
             descending: true) // Assuming 'regdate' is the timestamp field
         .startAfter([
-          lastItem != null ? lastItem.regdate : DateTime.now().toString()
-        ]) // Pass the field value instead of DocumentSnapshot
-        .limit(2) // Adjust the limit based on your requirements
+      lastItem != null ? lastItem.regdate : DateTime.now().toString()
+    ]) // Pass the field value instead of DocumentSnapshot
+
         .get();
 
     // Process the documents and convert them to FeedItem objects

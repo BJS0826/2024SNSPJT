@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:christian_sns/botnav/feeddetail.dart';
 import 'package:image/image.dart' as img;
+import 'dart:async';
 
 class CreateFeedPage extends StatefulWidget {
   @override
@@ -14,9 +15,22 @@ class _CreateFeedPageState extends State<CreateFeedPage> {
   File? selectedImage;
   File? selectedBackgroundImage;
   img.Image? image;
+  bool _isImagePickerActive = false;
 
   Future<void> getImageFromGallery() async {
+    if (_isImagePickerActive) {
+      setState(() {
+        _isImagePickerActive = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isImagePickerActive = true;
+    });
+
     final picker = ImagePicker();
+
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
